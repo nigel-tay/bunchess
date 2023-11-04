@@ -4,4 +4,18 @@ body {
     justify-content: center;
     align-items: center;
     height: 90vh;
+    color: white;
+    background-color: forestgreen;
+}
+
+.button {
+    background-color: bisque;
+    color: black;
+    border: none;
+    border-radius: 15px;
+}
+
+.button:hover {
+    cursor: pointer;
+    background-color: aqua;
 }

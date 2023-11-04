@@ -2,15 +2,19 @@ import express from 'express';
 import morgan from 'morgan';
 import { engine } from 'express-handlebars';
 import { v4 } from 'uuid';
+import { EventSource } from 'express-ts-sse';
 
 // Establish port
 const port = process.env.PORT || 3000;
+
+// Create instance of SSE Server
+const sse = new EventSource();
 
 // Create app instance
 const app = express();
 
 // Configure render
-app.engine('html', engine({ defaultLayout: false }))
+app.engine('html', engine({ defaultLayout: false }));
 app.set('view engine', 'html'); // html is the file suffix
 
 
@@ -26,7 +30,7 @@ app.post('/chess', express.urlencoded({ extended: true }),
         }
 )
 
-app.get('/chess', express.urlencoded({ extended: true}),
+app.get('/chess', express.urlencoded({ extended: true }),
         (req, resp) => {
             
             const gameId = req.query.gameId;
@@ -35,9 +39,21 @@ app.get('/chess', express.urlencoded({ extended: true}),
         }
 )
 
+// SSE endpoint
+app.get('/chess/stream', sse.init);
 
+// PATCH /chess/:gameId
+app.patch('/chess/:gameIdFromParams', express.json(),
+        (req, resp) => {
+            // Get gameId from path
+            const gameId = req.params.gameIdFromParams;
+            const move = req.body;
 
+            console.info(`GameId: ${gameId}: `, move);
 
+            resp.status(201).json({ timeStamp: (new Date()).getTime() });
+        }
+)
 
 // Serve from static dir
 app.use(express.static(__dirname + '/static'))
