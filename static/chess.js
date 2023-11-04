@@ -33,3 +33,11 @@ const chess = Chessboard('chess', config);
 
 // Create an SSE connection
 const sse = new EventSource('/chess/stream');
+// Receive moces for gameId
+sse.addEventListener(gameId, message => {
+    console.info('SSE Message: ', message);
+    const { src, dst, piece } = JSON.parse(message.data);
+    console.info(src, dst, piece);
+
+    chess.move(`${src}-${dst}`);
+});

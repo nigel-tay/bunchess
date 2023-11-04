@@ -51,6 +51,9 @@ app.patch('/chess/:gameIdFromParams', express.json(),
 
             console.info(`GameId: ${gameId}: `, move);
 
+            // data should be stringifies normally, but the current library we are using helps us do that
+            sse.send({ event: gameId, data: move });
+
             resp.status(201).json({ timeStamp: (new Date()).getTime() });
         }
 )
