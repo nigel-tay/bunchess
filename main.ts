@@ -22,10 +22,18 @@ app.post('/chess', express.urlencoded({ extended: true }),
         (req, resp) => {
             const gameId = v4().substring(0, 8);
             const orientation = 'white';
-
             resp.status(200).render('chess', { gameId, orientation });
         }
-    )
+)
+
+app.get('/chess', express.urlencoded({ extended: true}),
+        (req, resp) => {
+            
+            const gameId = req.query.gameId;
+            const orientation = 'black';
+            resp.status(200).render('chess', { gameId, orientation });
+        }
+)
 
 
 
